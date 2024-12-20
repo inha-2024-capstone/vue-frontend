@@ -1,0 +1,166 @@
+<template>
+  <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
+    <div class="modal-content">
+      <h1>Log In</h1>
+      <form @submit.prevent="handleSubmit">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            v-model="email"
+            required
+            placeholder="Enter your email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            v-model="password"
+            required
+            placeholder="Enter your password"
+          />
+          <p v-if="!isPasswordValid && password" class="error-message">
+            Password must contain at least 5 characters, including letters and numbers.
+          </p>
+        </div>
+
+        <div class="form-actions">
+          <button :disabled="isSubmitting" class="submit-button">
+            {{ isSubmitting ? "Logging In..." : "Log In" }}
+          </button>
+        </div>
+      </form>
+
+      <div class="form-actions">
+        <button @click="openRegister" class="register-button">Register</button>
+      </div>
+
+      <button @click="closeModal" class="close-button">Close</button>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      email: '',
+      password: '',
+      isPasswordValid: false,
+      isSubmitting: false,
+      isModalOpen: false,
+    };
+  },
+  watch: {
+    password(newPassword) {
+      this.isPasswordValid =
+        newPassword.length >= 5 &&
+        /\d/.test(newPassword) &&
+        /[A-Za-z]/.test(newPassword);
+    },
+  },
+  methods: {
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    handleSubmit() {
+      if (!this.isPasswordValid) {
+        return;
+      }
+      this.isSubmitting = true;
+      // 모의 로그인 처리
+      setTimeout(() => {
+        alert('Logged in!');
+        this.isSubmitting = false;
+        this.closeModal();
+      }, 1000);
+    },
+    openRegister() {
+      // 회원가입 화면으로 이동하는 로직
+      alert('Redirect to registration page');
+    },
+  },
+};
+</script>
+
+<style scoped>
+/* 모달 배경 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 모달 콘텐츠 */
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+  position: relative;
+}
+
+/* 폼 그룹 */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+/* 에러 메시지 */
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* 버튼 스타일 */
+.submit-button,
+.register-button,
+.close-button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.submit-button[disabled] {
+  background-color: gray;
+}
+
+.close-button {
+  background-color: #f44336;
+  margin-top: 20px;
+}
+</style>
